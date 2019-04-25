@@ -4,8 +4,6 @@ const json = require("koa-json");
 const path = require("path");
 const bodyParser = require("koa-bodyparser");
 
-// Auth:
-
 // Utilizing Koa EJS:
 const render = require("koa-ejs");
 
@@ -13,7 +11,21 @@ const render = require("koa-ejs");
 const app = new Koa();
 const router = new KoaRouter();
 
+// Auth: Will utilize bcrypt for auth demo:
+const bcrypt = require('bcrypt');
+const password = "password1234";
+// const saltRounds = 10;
+// const myPlaintextPassword = 's0/\/\P4$$w0rD';
+// const password = 'password1234';
+
+
+// With no DB its futile..
+const auth = require('koa-basic-auth');
+//This is what the authentication would be checked against
+const credentials = { name: 'testUser', pass: 'password1234' }
+
 // Replace with db:
+const hashedPass = []; 
 const mathProbs = ["2+2"];
 
 // Outputs in Json foramatting:
@@ -44,6 +56,8 @@ router.get("/", index);
 router.get("/show", showItems);
 router.get("/add", showAdd);
 router.post("/add", add);
+router.get("/auth", showAuth);
+router.post("/auth", checkAuth);
 
 // Test routes while pulling params:
 // router.get("/test", ctx => (ctx.body = `Hello ${ctx.user}`));
@@ -59,6 +73,41 @@ async function index(ctx) {
     });
 };
 
+// // Auth Section: ---------------------
+async function showAuth(ctx) {
+    await ctx.render("auth", {
+        title: "Auth Section:",
+        body: "Enter Your Info!"
+    });
+};
+
+// Add Problem:
+async function checkAuth(ctx) {
+    const body = ctx.request.body;
+    // console.log(body);
+    const username = body.username;
+    // const password = body.password;
+   
+    // console.log(username);
+    // console.log(password);
+
+    // Hashing:
+    bcrypt.hash(password, 10)
+    .then(hashed_password => {
+        console.log("hash:", hash)
+        
+    })
+    .catch(error => {
+        
+    });
+
+    // mathProbs.push(problem);
+    ctx.redirect("/show");
+};
+
+
+
+// Math Section: ---------------------
 // List of Problems:
 async function showItems(ctx) {
     await ctx.render("showItems", {
@@ -78,7 +127,6 @@ async function showAdd(ctx) {
 
 // Add Problem:
 async function add(ctx) {
-    const resultsAll = [];
     const body = ctx.request.body;
     const valueOne = parseInt(body.valueOne); // Converting string value to integer
     const operator = body.operator;
@@ -114,10 +162,8 @@ async function add(ctx) {
         default:
             console.log("Please Input Valid Operator");
     }
-
     mathProbs.push(problem);
     ctx.redirect("/show");
-    
 };
 // End Renders-----------------
 
