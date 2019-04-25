@@ -8,12 +8,23 @@
 </head>
 <body>
     <h1 class="display-r mb-4">
-        Add Thing
+       Add Problem Below!<br>
+       Please enter WITHOUT spaces
+       <p>Example: "4+4" Without Quotes</p>
     </h1>
     <form action="/add" method ="POST">
+        <!-- <div class="form-group">
+            <input type="text" name ="problem" class="form-control form-control-lg" placeholder="Add problem here">
+        </div> -->
         <div class="form-group">
-            <input type="text" name ="thing" class="form-control form-control-lg" placeholder="Add Something You Love!">
+            <input type="text" name ="valueOne" class="form-control form-control-lg" placeholder="Add first value Here">
         </div>
+        <div class="form-group">
+                <input type="text" name ="operator" class="form-control form-control-lg" placeholder="Add which type of Operator ex: -,+,*,/ ">
+        </div>
+        <div class="form-group">
+                <input type="text" name ="valueTwo" class="form-control form-control-lg" placeholder="Add second value here">
+            </div>
         
         <input type="submit" value="Add" class="btn btn-dark btn-lg">
         <a href="/" class="btn btn-danger btn-lg">Cancel</a>

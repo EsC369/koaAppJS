@@ -12,11 +12,8 @@ const app = new Koa();
 const router = new KoaRouter();
 
 // Replace with db:
-// const things = ["My family", "Programming", "Music"]
-
-// VARS:
-const operators = ["+","-","/","*"];
-const mathProbs = ["2+2=4"];
+const things = ["My family", "Programming", "Music"]
+const mathProbs = ["4+4", "8*8"]
 
 // Outputs in Json foramatting:
 app.use(json());
@@ -42,79 +39,70 @@ render(app, {
 // Routes: --------------
 router.get("/", index);
 
+router.get("/showMath", showMath);
+router.get("/math", showAddProb)
+router.post("/math", addMath);
 // router.get("/", ctx => (ctx.body = "Hello World!"));
 router.get("/show", showItems);
 router.get("/add", showAdd);
 router.post("/add", add);
 
 // Test routes while pulling params:
-// router.get("/test", ctx => (ctx.body = `Hello ${ctx.user}`));
+router.get("/test", ctx => (ctx.body = `Hello ${ctx.user}`));
 router.get("/test2/:name", ctx => (ctx.body = `Hello ${ctx.params.name} `));
 
 //Renders-------
 // Show Root:
 async function index(ctx) {
-    console.log("Hello World");
     await ctx.render("index", {
         title: "Root Message: ",
         body: "Hello World!"
     });
 };
 
-// Extra---
+// Show Math: ---
+
 // List of Problems:
-async function showItems(ctx) {
-    await ctx.render("showItems", {
+async function showMath(ctx) {
+    await ctx.render("showMath", {
         title: "Problems Submitted:",
         mathProbs: mathProbs
     });
 };
 
-// Show add page:
-async function showAdd(ctx) {
-    await ctx.render("add", {
+async function showAddProb(ctx) {
+    await ctx.render("math", {
         title: "Welcome to The math Section! ",
         body: "This Section allows you to do rudementary math operations!\n Please Enter your math problem Below! \n "
     });
 };
+// Do Math:
+async function addMath(ctx) {
+    const body = ctx.request.body;
+    mathProb.push(body.problem);
+    ctx.redirect("/showMath");
+};
+//------
 
-// Add Problem:
+
+// Extra---
+// List of things:
+async function showItems(ctx) {
+    await ctx.render("showItems", {
+        title: "Things I Love:",
+        things: things
+    });
+};
+
+// Show add page:
+async function showAdd(ctx) {
+    await ctx.render("add");
+};
+
+// Add Thing:
 async function add(ctx) {
     const body = ctx.request.body;
-    const valueOne = parseInt(body.valueOne); // Converting string value to integer
-    const operator = body.operator;
-    const valueTwo = parseInt(body.valueTwo); // Converting string value to integer
-    const problem = valueOne+operator+valueTwo;
-    let result = 0;
-
-    switch(operator){
-        case "+":
-            console.log("Addition Operator");
-            result = valueOne + valueTwo;
-            console.log("Result is: ", result);
-            break;
-        case "-":
-            console.log("Subtraction Operator");
-            result = valueOne - valueTwo;
-            console.log("Result is: ", result);
-            break;
-        case "*":
-            console.log("Multiplication Operator");
-            result = valueOne * valueTwo;
-            console.log("Result is: ", result);
-            break;
-        case "/":
-            console.log("Division Operator");
-            result = valueOne / valueTwo;
-            console.log("Result is: ", result);
-            break;
-        default:
-            console.log("Please Input valid Operator");
-        console.log(":TEST")
-        // return result;
-    }
-
-    mathProbs.push(problem);
+    things.push(body.thing);
     ctx.redirect("/show");
 };
 // End Renders-----------------
