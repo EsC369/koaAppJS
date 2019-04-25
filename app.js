@@ -4,7 +4,9 @@ const json = require("koa-json");
 const path = require("path");
 const bodyParser = require("koa-bodyparser");
 
-//Utilizing Koa EJS:
+// Auth:
+
+// Utilizing Koa EJS:
 const render = require("koa-ejs");
 
 // Declare Koa App:
@@ -12,11 +14,7 @@ const app = new Koa();
 const router = new KoaRouter();
 
 // Replace with db:
-// const things = ["My family", "Programming", "Music"]
-
-// VARS:
-const operators = ["+","-","/","*"];
-const mathProbs = ["2+2=4"];
+const mathProbs = ["2+2"];
 
 // Outputs in Json foramatting:
 app.use(json());
@@ -61,11 +59,11 @@ async function index(ctx) {
     });
 };
 
-// Extra---
 // List of Problems:
 async function showItems(ctx) {
     await ctx.render("showItems", {
         title: "Problems Submitted:",
+        body: "Your results have been sent to the front end!",
         mathProbs: mathProbs
     });
 };
@@ -80,6 +78,7 @@ async function showAdd(ctx) {
 
 // Add Problem:
 async function add(ctx) {
+    const resultsAll = [];
     const body = ctx.request.body;
     const valueOne = parseInt(body.valueOne); // Converting string value to integer
     const operator = body.operator;
@@ -92,30 +91,33 @@ async function add(ctx) {
             console.log("Addition Operator");
             result = valueOne + valueTwo;
             console.log("Result is: ", result);
+            ctx.body = {result: result}
             break;
         case "-":
             console.log("Subtraction Operator");
             result = valueOne - valueTwo;
             console.log("Result is: ", result);
+            ctx.body = {result: result}
             break;
         case "*":
             console.log("Multiplication Operator");
             result = valueOne * valueTwo;
             console.log("Result is: ", result);
+            ctx.body = {result: result}
             break;
         case "/":
             console.log("Division Operator");
             result = valueOne / valueTwo;
             console.log("Result is: ", result);
+            ctx.body = {result: result}
             break;
         default:
-            console.log("Please Input valid Operator");
-        console.log(":TEST")
-        // return result;
+            console.log("Please Input Valid Operator");
     }
 
     mathProbs.push(problem);
     ctx.redirect("/show");
+    
 };
 // End Renders-----------------
 
