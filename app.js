@@ -3,6 +3,9 @@ const KoaRouter = require("koa-router");
 const json = require("koa-json");
 const path = require("path");
 const bodyParser = require("koa-bodyparser");
+var auth = require('koa-basic-auth');
+// const koaBetterBody = require('koa-better-body');
+const jwt = require('koa-jwt');
 
 // Utilizing Koa EJS:
 const render = require("koa-ejs");
@@ -14,20 +17,17 @@ const router = new KoaRouter();
 // Auth: Will utilize bcrypt for auth demo:
 const bcrypt = require('bcrypt');
 const password = "password1234";
-// const saltRounds = 10;
-// const myPlaintextPassword = 's0/\/\P4$$w0rD';
-// const password = 'password1234';
-
-
-// With no DB its futile..
-const auth = require('koa-basic-auth');
 //This is what the authentication would be checked against
+const hashed_password = "$2b$10$XdRov6qQqPHIAtnHroKzge4dEAEQ6tk1cH3zUozm4YHpjFYkezKyC"
 const credentials = { name: 'testUser', pass: 'password1234' }
+const checkUser = "testUser";
+const checkPass = "password1234";
 
 // Replace with db:
-const hashedPass = []; 
+var results = [];
 const mathProbs = ["2+2"];
 
+// app.use(koaBetterBody({fields: 'body'}));
 // Outputs in Json foramatting:
 app.use(json());
 
@@ -57,7 +57,7 @@ router.get("/show", showItems);
 router.get("/add", showAdd);
 router.post("/add", add);
 router.get("/auth", showAuth);
-router.post("/auth", checkAuth);
+// router.post("/auth", checkAuth);
 
 // Test routes while pulling params:
 // router.get("/test", ctx => (ctx.body = `Hello ${ctx.user}`));
@@ -81,29 +81,69 @@ async function showAuth(ctx) {
     });
 };
 
-// Add Problem:
-async function checkAuth(ctx) {
-    const body = ctx.request.body;
-    // console.log(body);
-    const username = body.username;
-    // const password = body.password;
-   
-    // console.log(username);
-    // console.log(password);
+// Check Auth:
+// TESTING GROUNDS:----------------------
 
-    // Hashing:
-    bcrypt.hash(password, 10)
-    .then(hashed_password => {
-        console.log("hash:", hash)
+// app.
+// async function checkAuth(ctx) {
+//     await ctx.render("auth", {
         
-    })
-    .catch(error => {
-        
-    });
 
-    // mathProbs.push(problem);
-    ctx.redirect("/show");
-};
+//     });
+// };
+
+
+// Failed...  Generators deprecated...
+// async function checkAuth(ctx) {
+//     //Error handling middleware
+//     app.use(function *(next){
+//         try {
+//         yield next;
+//         } catch (err) {
+//         if (401 == err.status) {
+//             this.status = 401;
+//             this.set('WWW-Authenticate', 'Basic');
+//             this.body = 'You have no access here';
+//         } else {
+//             throw err;
+//         }
+//         }
+//     });
+    
+//     // Set up authentication here as first middleware. 
+//     // This returns an error if user is not authenticated.
+//     router.get('/auth', auth(credentials), function *(){
+//         this.body = 'Access Granted!';
+//         yield next;
+//     });
+    
+//     // No authentication middleware present here.
+//     router.get('/unprotected', function*(next){
+//         this.body = "Anyone can access this area";
+//         yield next;
+//     });
+// };
+
+// ENDTESTING GROUNDS:----------------------// TESTING GROUNDS:----------------------
+
+
+
+ // Auth / bcrypt: ------------------------------
+// async function checkAuth(ctx) {
+//     const body = ctx.request.body;
+//     const username = body.username;
+//     const password = body.password;
+//     bcrypt.compare(password, hashed_password)
+//     .then(result => {
+//         console.log("True or False: Was your password correct?");
+//         console.log(result);
+
+//     })
+//     .catch(error => {
+//         console.log(error);
+//     })
+//     ctx.redirect("/");
+// };
 
 
 
@@ -139,26 +179,22 @@ async function add(ctx) {
             console.log("Addition Operator");
             result = valueOne + valueTwo;
             console.log("Result is: ", result);
-            ctx.body = {result: result}
-            break;
+            return ctx.body = {result: result}
         case "-":
             console.log("Subtraction Operator");
             result = valueOne - valueTwo;
             console.log("Result is: ", result);
-            ctx.body = {result: result}
-            break;
+            return ctx.body = {result: result}
         case "*":
             console.log("Multiplication Operator");
             result = valueOne * valueTwo;
             console.log("Result is: ", result);
-            ctx.body = {result: result}
-            break;
+            return ctx.body = {result: result}
         case "/":
             console.log("Division Operator");
             result = valueOne / valueTwo;
             console.log("Result is: ", result);
             ctx.body = {result: result}
-            break;
         default:
             console.log("Please Input Valid Operator");
     }
