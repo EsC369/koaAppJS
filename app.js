@@ -62,12 +62,12 @@ router.get("/auth", showAuth);
 router.post("/auth", checkAuth);
 router.get("/success", success);
 
+// Renders And Functions: ---------
 async function resetSess(ctx) {
     // Reset session:
     ctx.session = {};
 }
 
-//Renders-------
 // Show Root:
 async function index(ctx) {
     await resetSess(ctx);
@@ -128,6 +128,7 @@ async function checkAuth(ctx, next) {
     }
   };
 
+  // Success page checks for valid session:
 async function success(ctx) {
     userSess = ctx.session.userinfo;
     if(userSess > 0){
@@ -207,4 +208,5 @@ async function add(ctx) {
 app.use(router.routes()).use(router.allowedMethods());
 
 // App Listening/ports:
-app.listen(3000, () => console.log("server Started... "));
+const port = 3000;
+app.listen(port, () => console.log("Server Started on port:", port));
