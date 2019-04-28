@@ -4,6 +4,7 @@ const json = require("koa-json");
 const path = require("path");
 const bodyParser = require("koa-bodyparser");
 var session = require('koa-session');
+var KoaStatic = require("koa-static");
 
 // Utilizing Koa EJS:
 const render = require("koa-ejs");
@@ -11,6 +12,11 @@ const render = require("koa-ejs");
 // Declare Koa App:
 const app = new Koa();
 const router = new KoaRouter();
+
+//static:
+app.use(KoaStatic("css"));
+// serve(__dirname + "/static/css")
+// app.use(require('koa-static')("/static/css/style.css"));
 
 // Koa-Session:
 app.keys = ['its a secret!'];
@@ -61,8 +67,13 @@ router.post("/add", add);
 router.get("/auth", showAuth);
 router.post("/auth", checkAuth);
 router.get("/success", success);
+router.get("/secretPage", secret);
 
 // Renders And Functions: ---------
+async function secret(ctx) {
+    await ctx.render("/particles/test");
+}
+
 async function resetSess(ctx) {
     // Reset session:
     ctx.session = {};
@@ -196,9 +207,9 @@ async function add(ctx) {
             result = valueOne / valueTwo;
             mathProbs.push(problem);
             console.log("Result is: ", result);
-            ctx.body = {result: result}
-        default:
-            console.log("Please Input Valid Operator");
+            return ctx.body = {result: result}
+        // default:
+            // console.log("Please Input Valid Operator");
     }
     ctx.redirect("/show");
 };
