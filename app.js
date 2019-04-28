@@ -13,16 +13,15 @@ const render = require("koa-ejs");
 const app = new Koa();
 const router = new KoaRouter();
 
-//static:
-app.use(KoaStatic("css"));
-// serve(__dirname + "/static/css")
-// app.use(require('koa-static')("/static/css/style.css"));
+// Koa Static Css:
+app.use(KoaStatic("static"));
+
 
 // Koa-Session:
 app.keys = ['its a secret!'];
 const CONFIG = {
     key: 'koa:sess',
-    maxAge: 8000,
+    maxAge: 60000, // 1 min
     autoCommit: true,
     overwrite: true,
     httpOnly: true,
@@ -67,13 +66,8 @@ router.post("/add", add);
 router.get("/auth", showAuth);
 router.post("/auth", checkAuth);
 router.get("/success", success);
-router.get("/secretPage", secret);
 
 // Renders And Functions: ---------
-async function secret(ctx) {
-    await ctx.render("/particles/test");
-}
-
 async function resetSess(ctx) {
     // Reset session:
     ctx.session = {};

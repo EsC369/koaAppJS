@@ -1,12 +1,15 @@
-<h1><%- title %></h1>
+<div class="jumbotron">
+    <h1><%- title %></h1>
 
-<ul class="list-group">
-    <%  mathProbs.forEach(problem => { %>
-        <li class="list-group-item">
-            <%= problem %>
-        </li>
-    <% }); %>
+    <ul class="list-group">
+        <%  mathProbs.forEach(problem => { %>
+            <li class="list-group-item">
+                <%= problem %>
+            </li>
+        <% }); %>
 
-</ul>
+    </ul>
 
-<p align=center> <%- body %></p>
+    <p align=center> <%- body %></p>
+ <center><img src="/goodJob.gif" alt="This is my animated image" height="350" width="500"></center>
+</div>
